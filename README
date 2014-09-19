@@ -1,0 +1,13 @@
+app_youtube_download_url: display download urls for an youtube video
+====================================================================
+
+Display download URLs for an YouTube video
+
+Reference
+=========
+
+How to get the Lowest Quality YouTube video?
+http://stackoverflow.com/q/18876872
+
+Select all contents of textbox when it receives focus (JavaScript or jQuery)
+http://stackoverflow.com/q/480735
