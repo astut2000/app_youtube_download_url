@@ -2,19 +2,19 @@
 
 function fetch($url)
 {
-    $d = __DIR__;
+	$d = __DIR__;
 
-    $md5 = md5($url);
-    $cache_file = "$d/../../cache/$md5";
-    if (!file_exists($cache_file)) {
-        $html = file_get_contents($url);
-        file_put_contents($cache_file, $html);
-    }
-    else {
-        $html = file_get_contents($cache_file);
-    }
+	$md5 = md5($url);
+	$cache_file = "$d/../../cache/$md5";
+	if (!file_exists($cache_file) || filemtime($file) < strtotime('-1 hour')) {
+		$html = file_get_contents($url);
+		file_put_contents($cache_file, $html);
+	}
+	else {
+		$html = file_get_contents($cache_file);
+	}
 
-    return $html;
+	return $html;
 }
 
 function get_video_id($url)
