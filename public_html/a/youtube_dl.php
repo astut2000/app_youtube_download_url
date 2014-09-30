@@ -6,7 +6,7 @@ function fetch($url)
 
 	$md5 = md5($url);
 	$cache_file = "$d/../../cache/$md5";
-	if (!file_exists($cache_file) || filemtime($file) < strtotime('-1 hour')) {
+	if (!file_exists($cache_file) || filemtime($cache_file) < strtotime('-1 hour')) {
 		$html = file_get_contents($url);
 		file_put_contents($cache_file, $html);
 	}
