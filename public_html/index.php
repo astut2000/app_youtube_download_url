@@ -1,4 +1,42 @@
-<?php require 'a/include.php' ?>
+<?php
+
+require 'a/include.php';
+
+if (isset($_GET['listen'])) {
+	$video_info = get_video_info($_GET['listen']);
+	$fmt_list = explode(',', $video_info['fmt_list']);
+        $dashmpd = new SimpleXMLElement(fetch($video_info['dashmpd']));
+
+	$audio = array();
+	foreach ($dashmpd->Period->AdaptationSet as $AdaptationSet) {
+		foreach ($AdaptationSet->Representation as $Representation) {
+                        if (isset($Representation->AudioChannelConfiguration)) {
+				$channels = $Representation->AudioChannelConfiguration['value'];
+				$hz = $Representation['audioSamplingRate'];
+				$mime = $AdaptationSet['mimeType'];
+				$codec = $Representation['codecs'];
+				$url = $Representation->BaseURL;
+				$audio[] = (object) compact('channels', 'hz', 'mime', 'codec', 'url');
+			}
+		}
+	}
+
+	usort($audio, function ($a, $b) {
+		if ($diff = strcmp($a->hz, $b->hz)) {
+			return $diff;
+		}
+		if ($diff = strcmp($a->channels, $b->channels)) {
+			return $diff;
+		}
+		return 0;
+	});
+	$audio = array_reverse($audio);
+
+	header('Location: ' . addslashes($audio[0]->url));
+	exit;
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
