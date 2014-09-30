@@ -28,7 +28,21 @@ function get_video_info($id)
 {
 	$html = fetch("http://www.youtube.com/get_video_info?video_id=$id");
 
+	// id: nCnJ_x-QpJM
+	//
+	// array (size=8)
+	//   'errorcode' => string '150' (length=3)
+	//   'reason' => string 'This video contains content from Quiz Group Pro. It is restricted from playback on certain sites.<br/><u><a href='http://www.youtube.com/watch?v=nCnJ_x-QpJM&feature=player_embedded' target='_blank'>Watch on YouTube</a></u>' (length=222)
+	//   'status' => string 'fail' (length=4)
+	//   'eventid' => string 'Aq4qVMLdN4ab-gOroIHwDQ' (length=22)
+	//   'errordetail' => string '0' (length=1)
+	//   'csi_page_type' => string 'embed' (length=5)
+	//   'c' => string 'WEB' (length=3)
+	//   'enablecsi' => string '1' (length=1)
 	parse_str($html, $video_info);
+	if (!empty($video_info['errorcode'])) {
+		throw new Exception(__FUNCTION__ . ': ' . json_encode($video_info));
+	}
 
 	$tmp = array();
 	foreach(explode(',', $video_info['url_encoded_fmt_stream_map']) as $stream_str) {
